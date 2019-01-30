@@ -11,6 +11,7 @@ from giskardpy.tfwrapper import lookup_transform
 if __name__ == '__main__':
     rospy.init_node('add_urdf')
     giskard = GiskardWrapper()
+    rospy.sleep(1)
     try:
         name = rospy.get_param('~name')
         path = rospy.get_param('~path', None)
