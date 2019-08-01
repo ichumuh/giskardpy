@@ -226,7 +226,7 @@ class CompiledFunction(object):
         try:
             out = np.empty(self.l)
             self.fast_f.unsafe_real(np.array(filtered_args, dtype=np.double), out)
-            return out.reshape(self.shape)
+            return np.nan_to_num(out).reshape(self.shape)
         except KeyError as e:
             msg = u'KeyError: {}\ntry deleting the data folder to trigger recompilation'.format(e.message)
             raise SymengineException(msg)

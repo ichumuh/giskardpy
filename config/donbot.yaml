@@ -12,7 +12,7 @@ nWSR: None # None results in a nWSR estimation that's fine most of the time
 max_traj_length: 30 # not implemented
 collision_time_threshold: 15 # not implemented
 joint_vel_limit:
-  default: 1
+  default: 100
 joint_acceleration_limit: # multiply your desired acc limit with sample period
   default: 10000
 joint_weights:

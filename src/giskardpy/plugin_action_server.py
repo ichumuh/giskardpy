@@ -2,9 +2,11 @@ from Queue import Empty, Queue
 
 import actionlib
 import rospy
+from control_msgs.msg import JointTrajectoryControllerState
 from giskard_msgs.msg._MoveGoal import MoveGoal
 from giskard_msgs.msg._MoveResult import MoveResult
 from py_trees import Blackboard, Status
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from giskardpy.exceptions import MAX_NWSR_REACHEDException, QPSolverException, SolverTimeoutError, InsolvableException, \
     SymengineException, PathCollisionException, UnknownBodyException, ImplementationException
@@ -127,13 +129,36 @@ class SendResult(ActionServerBehavior):
         Blackboard().set('exception', None)
         result = MoveResult()
         result.error_code = self.exception_to_error_code(e)
+        trajectory = self.get_god_map().safe_get_data(identifier.trajectory)
+        result.trajectory = self.traj_to_msg(trajectory)
         if self.get_as().is_preempt_requested() or not result.error_code == MoveResult.SUCCESS:
             self.get_as().send_preempted(result)
         else:
             self.get_as().send_result(result)
         return Status.SUCCESS
 
-
+    def traj_to_msg(self, trajectory):
+        """
+        :type traj: giskardpy.data_types.Trajectory
+        :return: JointTrajectory
+        """
+        self.controller_joints = rospy.wait_for_message(u'/whole_body_controller/state',
+                                                        JointTrajectoryControllerState).joint_names
+        sample_period = self.get_god_map().safe_get_data(identifier.sample_period)
+        trajectory_msg = JointTrajectory()
+        trajectory_msg.header.stamp = rospy.get_rostime() + rospy.Duration(0.5)
+        trajectory_msg.joint_names = self.controller_joints
+        for time, traj_point in trajectory.items():
+            p = JointTrajectoryPoint()
+            p.time_from_start = rospy.Duration(time*sample_period)
+            for joint_name in self.controller_joints:
+                if joint_name in traj_point:
+                    p.positions.append(traj_point[joint_name].position)
+                    p.velocities.append(traj_point[joint_name].velocity)
+                else:
+                    raise NotImplementedError(u'generated traj does not contain all joints')
+            trajectory_msg.points.append(p)
+        return trajectory_msg
 
     def exception_to_error_code(self, exception):
         """
