@@ -47,6 +47,6 @@ jobs:
         pip3 freeze | grep casadi
         
     - name: Setup upterm session
-#      if: always()
-      if: failure()
+      if: always()
+#       if: failure()
       uses: lhotari/action-upterm@v1
