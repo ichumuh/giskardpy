@@ -2,30 +2,30 @@ name: CI HSR standalone
 defaults:
   run:
     shell: bash -ieo pipefail {0}
-on:
-  push:
-    branches:
-      - master
-      - devel
-  pull_request:
-    branches:
-      - master
-      - devel
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'info'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
+# on:
+#   push:
+#     branches:
+#       - master
+#       - devel
+#   pull_request:
+#     branches:
+#       - master
+#       - devel
+#   workflow_dispatch:
+#     inputs:
+#       logLevel:
+#         description: 'Log level'
+#         required: true
+#         default: 'info'
+#         type: choice
+#         options:
+#         - info
+#         - warning
+#         - debug
+#       tags:
+#         description: 'Test scenario tags'
+#         required: false
+#         type: boolean
 jobs:
   build:
     runs-on: ubuntu-20.04
