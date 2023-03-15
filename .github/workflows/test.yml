@@ -38,11 +38,11 @@ jobs:
           ~/hi.txt
         key: muh
     - if: ${{ steps.muh-load.outputs.cache-hit != 'true' }}
-      name: List the state of node modules
+      name: create hi.txt
       continue-on-error: true
       run: |
         echo "cache miss"
-        date > hi.txt
+        date > ~/hi.txt
     - name: cache muh
       id: muh-save
       uses: actions/cache/save@v3
@@ -52,7 +52,7 @@ jobs:
         key: muh
     - name: touch
       run: |
-        cat hi.txt
+        cat ~/hi.txt
         
 #    - name: Setup upterm session
 ##      if: always()
