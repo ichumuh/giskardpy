@@ -3,14 +3,14 @@ defaults:
   run:
     shell: bash -ieo pipefail {0}
 on:
-  push:
-    branches:
-      - master
-      - devel
-  pull_request:
-    branches:
-      - master
-      - devel
+#   push:
+#     branches:
+#       - master
+#       - devel
+#   pull_request:
+#     branches:
+#       - master
+#       - devel
   workflow_dispatch:
     inputs:
       logLevel:
@@ -30,16 +30,22 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
+    - name: cache test
+      id: muh
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/hi.txt
+        key: muh
+    - if: ${{ steps.muh.outputs.cache-hit != 'true' }}
+      name: List the state of node modules
+      continue-on-error: true
+      run: |
+        echo asdf > hi.txt
     - name: touch
       run: |
-        touch hi.txt
-  reuse:
-    runs-on: ubuntu-20.04
-    needs: [build]
-    steps:
-    - name: read
-      run: |
         cat hi.txt
+        
 #    - name: Setup upterm session
 ##      if: always()
 #      if: failure()
