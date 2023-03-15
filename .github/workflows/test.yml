@@ -34,7 +34,7 @@ jobs:
       continue-on-error: true
       run: |
         mkdir ~/betterpybullet
-        cd betterpybullet
+        cd ~/betterpybullet
         git clone https://github.com/SemRoCo/bullet3.git
         cd bullet3
         ./build_better_pybullet.sh
