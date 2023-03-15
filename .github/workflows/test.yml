@@ -1,4 +1,4 @@
-name: CI HSR standalone
+name: TEST
 defaults:
   run:
     shell: bash -ieo pipefail {0}
