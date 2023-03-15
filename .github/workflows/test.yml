@@ -22,29 +22,29 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-    - name: load casadi
-      id: muh-load
+    - name: load bpb
+      id: bpb-load
       uses: actions/cache@v3
       with:
         path: |
-          ~/.cache/pip
-        key: muh
-    - if: ${{ steps.muh-load.outputs.cache-hit != 'true' }}
-      name: install casadi
+          ~/betterpybullet
+        key: bpb
+    - if: ${{ steps.bpb-load.outputs.cache-hit != 'true' }}
+      name: install pybullet
       continue-on-error: true
       run: |
-        echo "cache miss"
-        pip3 install casadi
-    - name: cache muh
-      id: muh-save
+        mkdir ~/betterpybullet
+        cd betterpybullet
+        git clone https://github.com/SemRoCo/bullet3.git
+        cd bullet3
+        ./build_better_pybullet.sh
+    - name: cache bpb
+      id: bpb-save
       uses: actions/cache/save@v3
       with:
         path: |
-          ~/.cache/pip
-        key: muh
-    - name: touch
-      run: |
-        pip3 freeze | grep casadi
+          ~/betterpybullet
+        key: bpb
         
     - name: Setup upterm session
       if: always()
