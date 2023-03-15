@@ -41,7 +41,7 @@ jobs:
       name: List the state of node modules
       continue-on-error: true
       run: |
-        echo asdf > hi.txt
+        date > hi.txt
     - name: touch
       run: |
         cat hi.txt
