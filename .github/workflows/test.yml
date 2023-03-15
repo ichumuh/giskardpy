@@ -32,8 +32,7 @@ jobs:
           ~/qpSWIFT
         key: qpSWIFT
     - if: ${{ steps.load-qpSWIFT.outputs.cache-hit != 'true' }}
-      name: install qpSWIFT
-      continue-on-error: true
+      name: compile qpSWIFT
       run: |
         cd ~
         git clone https://github.com/qpSWIFT/qpSWIFT
@@ -41,13 +40,10 @@ jobs:
         cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build --config Release
         sudo cmake --build build --target install
-        cd python
-        sudo python3 setup.py install
-    - if: ${{ steps.load-qpSWIFT.outputs.cache-hit == 'true' }}
-      name: add betterpybullet to bashrc
-      continue-on-error: true
+    - name: install qpSWIFT python wrapper
       run: |
         cd ~/qpSWIFT/python
+        sudo pip3 install numpy
         sudo python3 setup.py install
     - name: cache qpSWIFT
       id: cache-qpSWIFT
@@ -58,9 +54,9 @@ jobs:
         key: qpSWIFT
     - name: test qpSWIFT
       run: |
-        pip3 freeze | grep qpSWIFT
+        python3 ~/qpSWIFT/python/demoqp.py
         
-    - name: Setup upterm session
-      if: always()
+#     - name: Setup upterm session
+#       if: always()
 #       if: failure()
-      uses: lhotari/action-upterm@v1
+#       uses: lhotari/action-upterm@v1
