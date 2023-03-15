@@ -30,22 +30,26 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-    - name: touch1
-      run: |
-        echo 'asdf' > hi.txt
-    - name: cache test
-      id: muh
+    - name: load muh
+      id: muh-load
       uses: actions/cache@v3
       with:
         path: |
           ~/hi.txt
         key: muh
-    - if: ${{ steps.muh.outputs.cache-hit != 'true' }}
+    - if: ${{ steps.muh-load.outputs.cache-hit != 'true' }}
       name: List the state of node modules
       continue-on-error: true
       run: |
         echo "cache miss"
         date > hi.txt
+    - name: cache muh
+      id: muh-save
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ~/hi.txt
+        key: muh
     - name: touch
       run: |
         cat hi.txt
