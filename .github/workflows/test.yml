@@ -30,7 +30,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-    - name: load qpalm
+    - name: load casadi
       id: muh-load
       uses: actions/cache@v3
       with:
@@ -38,11 +38,11 @@ jobs:
           ~/.cache/pip
         key: muh
     - if: ${{ steps.muh-load.outputs.cache-hit != 'true' }}
-      name: install qpalm
+      name: install casadi
       continue-on-error: true
       run: |
         echo "cache miss"
-        sudo pip3 install qpalm
+        sudo pip3 install casadi
     - name: cache muh
       id: muh-save
       uses: actions/cache/save@v3
@@ -52,9 +52,9 @@ jobs:
         key: muh
     - name: touch
       run: |
-        pip3 freeze | grep qpalm
+        pip3 freeze | grep casadi
         
-    - name: Setup upterm session
+#     - name: Setup upterm session
 #      if: always()
-      if: failure()
-      uses: lhotari/action-upterm@v1
+#       if: failure()
+#       uses: lhotari/action-upterm@v1
