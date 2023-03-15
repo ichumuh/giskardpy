@@ -22,31 +22,43 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-    - name: load bpb
-      id: bpb-load
+    - name: load qpSWIFT
+      id: load-qpSWIFT
       uses: actions/cache@v3
       with:
         path: |
-          ~/betterpybullet
-        key: bpb
-    - if: ${{ steps.bpb-load.outputs.cache-hit != 'true' }}
-      name: install pybullet
+          ~/qpSWIFT
+        key: qpSWIFT
+    - if: ${{ steps.load-qpSWIFT.outputs.cache-hit != 'true' }}
+      name: install qpSWIFT
       continue-on-error: true
       run: |
-        mkdir ~/betterpybullet
-        cd ~/betterpybullet
-        git clone https://github.com/SemRoCo/bullet3.git
-        cd bullet3
-        ./build_better_pybullet.sh
-    - name: cache bpb
-      id: bpb-save
+        cd ~
+        git clone https://github.com/qpSWIFT/qpSWIFT
+        cd qpSWIFT
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release
+        sudo cmake --build build --target install
+        cd python
+        sudo python3 setup.py install
+    - if: ${{ steps.load-qpSWIFT.outputs.cache-hit == 'true' }}
+      name: add betterpybullet to bashrc
+      continue-on-error: true
+      run: |
+        cd ~/qpSWIFT/python
+        sudo python3 setup.py install
+    - name: cache qpSWIFT
+      id: cache-qpSWIFT
       uses: actions/cache/save@v3
       with:
         path: |
-          ~/betterpybullet
-        key: bpb
+          ~/qpSWIFT
+        key: qpSWIFT
+    - name: test qpSWIFT
+      run: |
+        pip3 freeze | grep qpSWIFT
         
-    - name: Setup upterm session
-      if: always()
+#     - name: Setup upterm session
+#       if: always()
 #       if: failure()
-      uses: lhotari/action-upterm@v1
+#       uses: lhotari/action-upterm@v1
