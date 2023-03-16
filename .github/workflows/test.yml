@@ -20,6 +20,9 @@ on:
         type: boolean
 jobs:
   build:
+    strategy:
+      matrix:
+        qp_solver: [qpalm, qpSWIFT]
     runs-on: ubuntu-20.04
     steps:
     - name: install numpy
@@ -56,7 +59,7 @@ jobs:
       run: |
         python3 ~/qpSWIFT/python/demoqp.py
         
-#     - name: Setup upterm session
-#       if: always()
+    - name: Setup upterm session
+      if: always()
 #       if: failure()
-#       uses: lhotari/action-upterm@v1
+      uses: lhotari/action-upterm@v1
