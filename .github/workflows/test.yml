@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-          cache: 'pip' # caching pip dependencies
+#       - uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.8'
+#           cache: 'pip' # caching pip dependencies
       - run: pip install -r requirements.txt        
       - name: Setup upterm session
         if: always()
