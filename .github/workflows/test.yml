@@ -27,41 +27,13 @@ jobs:
       QP_SOLVER: ${{ matrix.qp_solver }}
     runs-on: ubuntu-20.04
     steps:
-    - name: install numpy
-      run: pip3 install numpy
-    - name: load qpSWIFT
-      id: load-qpSWIFT
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/qpSWIFT
-        key: qpSWIFT
-    - if: ${{ steps.load-qpSWIFT.outputs.cache-hit != 'true' }}
-      name: compile qpSWIFT
-      run: |
-        cd ~
-        git clone https://github.com/qpSWIFT/qpSWIFT
-        cd qpSWIFT
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-        cmake --build build --config Release
-        sudo cmake --build build --target install
-    - name: install qpSWIFT python wrapper
-      run: |
-        cd ~/qpSWIFT/python
-        sudo pip3 install numpy
-        sudo python3 setup.py install
-    - name: cache qpSWIFT
-      id: cache-qpSWIFT
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ~/qpSWIFT
-        key: qpSWIFT
-    - name: test qpSWIFT
-      run: |
-        python3 ~/qpSWIFT/python/demoqp.py
-        
-    - name: Setup upterm session
-      if: always()
-#       if: failure()
-      uses: lhotari/action-upterm@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.10'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r dependencies.txt        
+      - name: Setup upterm session
+        if: always()
+# #       if: failure()
+        uses: lhotari/action-upterm@v1
