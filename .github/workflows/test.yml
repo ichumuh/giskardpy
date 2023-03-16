@@ -23,10 +23,10 @@ jobs:
     strategy:
       matrix:
         qp_solver: [qpalm, qpSWIFT]
+    env:
+      QP_SOLVER: ${{ matrix.qp_solver }}
     runs-on: ubuntu-20.04
     steps:
-    - name: export qp solver
-      run: export QP_Solver=${{ matrix.qp_solver }}
     - name: install numpy
       run: pip3 install numpy
     - name: load qpSWIFT
