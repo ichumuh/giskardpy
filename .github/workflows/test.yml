@@ -29,6 +29,6 @@ jobs:
 #           cache: 'pip' # caching pip dependencies
       - run: pip install -r requirements.txt        
       - name: Setup upterm session
-        if: always()
+        if: ${{ runner.debug == 'true' }}
 # #       if: failure()
         uses: lhotari/action-upterm@v1
