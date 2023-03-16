@@ -29,10 +29,11 @@ jobs:
 #           cache: 'pip' # caching pip dependencies
       - run: pip install -r requirements.txt    
       - name: Dump runner context
+        if: always()
         env:
           RUNNER_CONTEXT: ${{ toJson(runner) }}
         run: echo "$RUNNER_CONTEXT"
       - name: Setup upterm session
-        if: ${{ runner.debug == '1' }}
+        if: ${{ (always()) && (runner.debug == '1') }}
 # #       if: failure()
         uses: lhotari/action-upterm@v1
