@@ -27,7 +27,11 @@ jobs:
 #         with:
 #           python-version: '3.8'
 #           cache: 'pip' # caching pip dependencies
-      - run: pip install -r requirements.txt        
+      - run: pip install -r requirements.txt    
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
       - name: Setup upterm session
         if: ${{ runner.debug == '1' }}
 # #       if: failure()
